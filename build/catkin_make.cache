@@ -1,0 +1,2 @@
+krotic_control:krotic_description:krotic_gazebo:krotic_setup_tf
+-DCATKIN_DEVEL_PREFIX=/home/jose/krotic_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jose/krotic_ws/install -G Unix Makefiles

@@ -1,0 +1,8 @@
+prefix=/home/jose/krotic_ws/devel
+
+Name: krotic_setup_tf
+Description: Description of krotic_setup_tf
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/jose/krotic_ws/devel/lib 
+Requires: 

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<robot name="krotic" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<gazebo reference="base_footprint">
+    	<turnGravityOff>false</turnGravityOff>
+  	</gazebo>
+	<gazebo reference="base_link">
+		<turnGravityOff>false</turnGravityOff>
+  		<material>Gazebo/Black</material>
+	</gazebo>
+
+	<gazebo reference="caster_wheel">
+	 	<mu1 value="0.0"/>
+	    <mu2 value="0.0"/>
+	    <turnGravityOff>false</turnGravityOff>
+	    <material>Gazebo/Grey</material>
+	</gazebo>
+
+	<gazebo>
+	  	<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+	  		<robotNamespace>/krotic</robotNamespace>
+	  		<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    		<legacyModeNS>true</legacyModeNS>
+	  	</plugin>
+		<plugin filename="libgazebo_ros_joint_state_publisher.so" name="joint_state_publisher">
+			<jointName>right_wheel_hinge, left_wheel_hinge</jointName>
+			<updateRate>10.0</updateRate>
+			<alwaysOn>true</alwaysOn>
+		</plugin>
+	</gazebo>
+
+	<gazebo>
+  		<plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+		    <legacyMode>false</legacyMode>
+		    <rosDebugLevel>na</rosDebugLevel>
+			<publishWheelTF>True</publishWheelTF>
+			<publishTf>1</publishTf>
+			<publishWheelJointState>true</publishWheelJointState>
+			<alwaysOn>true</alwaysOn>
+			<updateRate>100.0</updateRate>
+		    <leftJoint>left_wheel_hinge</leftJoint>
+		    <rightJoint>right_wheel_hinge</rightJoint>
+		    <wheelSeparation>0.32</wheelSeparation>
+		    <wheelDiameter>${2*wheelRadius}</wheelDiameter>
+		    <broadcastTF>1</broadcastTF>
+			<wheelTorque>30</wheelTorque>
+			<wheelAcceleration>1.8</wheelAcceleration>
+			<publishOdomTF>true</publishOdomTF>
+			<odometrySource>world</odometrySource>
+			<commandTopic>cmd_vel</commandTopic>
+			<odometryFrame>odom</odometryFrame>
+			<odometryTopic>odom</odometryTopic>
+			<robotBaseFrame>base_footprint</robotBaseFrame>
+		</plugin>
+	</gazebo>
+
+	<gazebo reference="camera">
+		<material>Gazebo/Blue</material>
+		<sensor type="camera" name="camera1">
+			<update_rate>30.0</update_rate>
+			<camera name="head">
+				<horizontal_fov>1.3962634</horizontal_fov>
+				<image>
+					<width>800</width>
+					<height>800</height>
+					<format>R8G8B8</format>
+				</image>
+				<clip>
+					<near>0.02</near>
+					<far>300</far>
+				</clip>
+				<noise>
+		        <type>gaussian</type>
+		          	<mean>0.0</mean>
+		          	<stddev>0.007</stddev>
+		        </noise>
+			</camera>
+			<plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+				<alwaysOn>true</alwaysOn>
+				<updateRate>0.0</updateRate>
+				<cameraName>krotic/camera1</cameraName>
+				<imageTopicName>image_raw</imageTopicName>
+				<cameraInfoTopicName>camera_info</cameraInfoTopicName>
+				<frameName>camera_link</frameName>
+				<hackBaseline>0.07</hackBaseline>
+				<distortionK1>0.0</distortionK1>
+				<distortionK2>0.0</distortionK2>
+				<distortionK3>0.0</distortionK3>
+				<distortionT1>0.0</distortionT1>
+				<distortionT2>0.0</distortionT2>
+			</plugin>
+		</sensor>
+	</gazebo>
+
+	<gazebo reference="base_sonar">        
+		<sensor type="ray" name="TeraRanger">
+			<pose>0 0 0 0 0 0</pose>
+			<visualize>true</visualize>
+			<update_rate>50</update_rate>
+			<ray>
+				<scan>
+					<horizontal>
+						<samples>10</samples>
+						<resolution>1</resolution> 
+						<min_angle>-0.14835</min_angle>
+						<max_angle>0.14835</max_angle>
+					</horizontal>
+					<vertical>
+						<samples>10</samples>
+						<resolution>1</resolution> 
+						<min_angle>-0.14835</min_angle>
+						<max_angle>0.14835</max_angle> 
+					</vertical>
+				</scan>
+				<range>
+					<min>0.01</min>
+					<max>2</max>
+					<resolution>0.02</resolution>
+				</range>
+			</ray>
+			<plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+				<gaussianNoise>0.005</gaussianNoise>
+				<alwaysOn>true</alwaysOn>
+				<updateRate>50</updateRate>
+				<topicName>sensor/sonar</topicName>
+				<frameName>base_sonar</frameName>
+				<radiation>INFRARED</radiation>
+				<fov>0.2967</fov>
+			</plugin>
+		</sensor>  
+	</gazebo>
+</robot>

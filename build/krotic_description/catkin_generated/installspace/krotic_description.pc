@@ -1,0 +1,8 @@
+prefix=/home/jose/krotic_ws/install
+
+Name: krotic_description
+Description: Description of krotic_description
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/jose/krotic_ws/install/lib 
+Requires: 
