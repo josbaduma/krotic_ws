@@ -7,5 +7,6 @@
 subdirs(gtest)
 subdirs(krotic_control)
 subdirs(krotic_setup_tf)
+subdirs(krotic_light_sensor)
 subdirs(krotic_description)
 subdirs(krotic_gazebo)

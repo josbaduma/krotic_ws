@@ -119,6 +119,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/jose/krotic_ws/build/gtest/cmake_install.cmake")
   include("/home/jose/krotic_ws/build/krotic_control/cmake_install.cmake")
   include("/home/jose/krotic_ws/build/krotic_setup_tf/cmake_install.cmake")
+  include("/home/jose/krotic_ws/build/krotic_light_sensor/cmake_install.cmake")
   include("/home/jose/krotic_ws/build/krotic_description/cmake_install.cmake")
   include("/home/jose/krotic_ws/build/krotic_gazebo/cmake_install.cmake")
 

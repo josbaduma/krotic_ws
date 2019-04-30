@@ -1,0 +1,8 @@
+prefix=/home/jose/krotic_ws/devel
+
+Name: krotic_light_sensor
+Description: Description of krotic_light_sensor
+Version: 0.0.0
+Cflags: -I/home/jose/krotic_ws/src/krotic_light_sensor/include
+Libs: -L/home/jose/krotic_ws/devel/lib 
+Requires: gazebo_plugins gazebo_ros roscpp
