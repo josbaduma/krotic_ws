@@ -32,7 +32,7 @@
   <gazebo>
     <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
       <legacyMode>false</legacyMode>
-      <rosDebugLevel>Debug</rosDebugLevel>
+      <rosDebugLevel>na</rosDebugLevel>
       <publishWheelTF>True</publishWheelTF>
       <publishTf>1</publishTf>
       <publishWheelJointState>true</publishWheelJointState>
@@ -50,7 +50,7 @@
       <commandTopic>cmd_vel</commandTopic>
       <odometryFrame>odom</odometryFrame>
       <odometryTopic>odom</odometryTopic>
-      <robotBaseFrame>base_link</robotBaseFrame>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
     </plugin>
   </gazebo>
   <gazebo reference="camera">
@@ -76,7 +76,7 @@
       </camera>
       <plugin filename="libgazebo_ros_camera.so" name="camera_controller">
         <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
+        <updateRate>30.0</updateRate>
         <cameraName>krotic/camera1</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
@@ -91,41 +91,68 @@
     </sensor>
   </gazebo>
   <gazebo reference="base_sonar">
-    <sensor name="TeraRanger" type="ray">
-      <pose>0 0 0 0 0 0</pose>
+    <sensor name="SonarSensor" type="ray">
+      <pose>0.05 0 0 0 0 0</pose>
       <visualize>true</visualize>
-      <update_rate>50</update_rate>
+      <update_rate>40</update_rate>
       <ray>
         <scan>
           <horizontal>
-            <samples>10</samples>
+            <samples>720</samples>
             <resolution>1</resolution>
-            <min_angle>-0.14835</min_angle>
-            <max_angle>0.14835</max_angle>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
           </horizontal>
-          <vertical>
-            <samples>10</samples>
-            <resolution>1</resolution>
-            <min_angle>-0.14835</min_angle>
-            <max_angle>0.14835</max_angle>
-          </vertical>
         </scan>
         <range>
-          <min>0.01</min>
-          <max>2</max>
-          <resolution>0.02</resolution>
+          <min>0.10</min>
+          <max>10.0</max>
+          <resolution>0.001</resolution>
         </range>
       </ray>
-      <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
-        <gaussianNoise>0.005</gaussianNoise>
+      <plugin filename="libgazebo_ros_laser.so" name="gazebo_ros_head_hokuyo_controller">
         <alwaysOn>true</alwaysOn>
-        <updateRate>50</updateRate>
-        <topicName>sensor/sonar</topicName>
+        <topicName>scan/sonar</topicName>
         <frameName>base_sonar</frameName>
-        <radiation>INFRARED</radiation>
-        <fov>0.2967</fov>
       </plugin>
     </sensor>
+  </gazebo>
+  <gazebo reference="light_sensor">
+    <sensor name="camera" type="camera">
+      <camera name="__default__">
+        <horizontal_fov>1.047</horizontal_fov>
+        <image>
+          <width>320</width>
+          <height>240</height>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>100</far>
+        </clip>
+      </camera>
+      <plugin filename="libkrotic_light_sensor.so" name="krotic_light_sensor">
+        <cameraName>camera</cameraName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>10</updateRate>
+        <imageTopicName>rgb/image_raw</imageTopicName>
+        <depthImageTopicName>depth/image_raw</depthImageTopicName>
+        <pointCloudTopicName>depth/points</pointCloudTopicName>
+        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+        <frameName>camera_depth_optical_frame</frameName>
+        <baseline>0.1</baseline>
+        <distortion_k1>0.0</distortion_k1>
+        <distortion_k2>0.0</distortion_k2>
+        <distortion_k3>0.0</distortion_k3>
+        <distortion_t1>0.0</distortion_t1>
+        <distortion_t2>0.0</distortion_t2>
+        <pointCloudCutoff>0.4</pointCloudCutoff>
+        <robotNamespace>/</robotNamespace>
+      </plugin>
+    </sensor>
+    <self_collide>0</self_collide>
+    <kinematic>0</kinematic>
+    <gravity>1</gravity>
   </gazebo>
   <material name="black">
     <color rgba="0.0 0.0 0.0 1.0"/>
@@ -151,6 +178,7 @@
   <material name="white">
     <color rgba="1.0 1.0 1.0 1.0"/>
   </material>
+  <!-- Definition of the robot's base and is the parent link -->
   <link name="base_footprint">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -159,6 +187,7 @@
       </geometry>
     </visual>
   </link>
+  <!-- Definition of the chassis with the correct dimensions and positions -->
   <link name="base_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -179,11 +208,13 @@
       <inertia ixx="0.15" ixy="0" ixz="0" iyy="0.208333333333" iyz="0" izz="0.208333333333"/>
     </inertial>
   </link>
+  <!-- Create a joint between base link (chassis) and the footprint base -->
   <joint name="base_footprint_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.2"/>
     <parent link="base_footprint"/>
     <child link="base_link"/>
   </joint>
+  <!-- Definition of the caster wheel with their dimensions and position -->
   <link name="caster_wheel">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 -0.14"/>
@@ -204,6 +235,7 @@
       <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
     </inertial>
   </link>
+  <!-- Create a joint fixed to the base of the chassis -->
   <joint name="base_to_caster" type="fixed">
     <parent link="base_link"/>
     <child link="caster_wheel"/>
@@ -213,19 +245,19 @@
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.05" radius="0.12"/>
+        <cylinder length="0.03" radius="0.12"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.05" radius="0.12"/>
+        <cylinder length="0.03" radius="0.12"/>
       </geometry>
       <material name="grey"/>
     </visual>
     <inertial>
       <mass value="1"/>
-      <inertia ixx="0.00380833333333" ixy="0" ixz="0" iyy="0.00380833333333" iyz="0" izz="0.0072"/>
+      <inertia ixx="0.003675" ixy="0" ixz="0" iyy="0.003675" iyz="0" izz="0.0072"/>
     </inertial>
   </link>
   <gazebo reference="left_wheel">
@@ -259,19 +291,19 @@
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.05" radius="0.12"/>
+        <cylinder length="0.03" radius="0.12"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.05" radius="0.12"/>
+        <cylinder length="0.03" radius="0.12"/>
       </geometry>
       <material name="grey"/>
     </visual>
     <inertial>
       <mass value="1"/>
-      <inertia ixx="0.00380833333333" ixy="0" ixz="0" iyy="0.00380833333333" iyz="0" izz="0.0072"/>
+      <inertia ixx="0.003675" ixy="0" ixz="0" iyy="0.003675" iyz="0" izz="0.0072"/>
     </inertial>
   </link>
   <gazebo reference="right_wheel">
@@ -301,6 +333,7 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+  <!-- Adding a camera, defining the dimensions and the position on the robot chassis -->
   <link name="camera">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -321,11 +354,13 @@
       <inertia ixx="4.16666666667e-05" ixy="0" ixz="0" iyy="4.16666666667e-05" iyz="0" izz="4.16666666667e-05"/>
     </inertial>
   </link>
+  <!-- Create the joint between camera and base chassis -->
   <joint name="camera_fixed" type="fixed">
-    <origin rpy="0 0 0" xyz="0.1 0.1 0.17"/>
+    <origin rpy="0 0 0" xyz="0.18 0 0.1"/>
     <parent link="base_link"/>
     <child link="camera"/>
   </joint>
+  <!-- Definition of the sonar sensor with their dimensions and position -->
   <link name="base_sonar">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -345,10 +380,39 @@
       <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
     </inertial>
   </link>
+  <!-- Create a joint between the sensor and the chassis of the robot -->
   <joint name="sonar_joint" type="fixed">
     <axis xyz="0 1 0"/>
-    <origin rpy="0 0 0" xyz="0.2 0 0.10"/>
+    <origin rpy="0 0 0" xyz="0.2 0 0.05"/>
     <parent link="base_link"/>
     <child link="base_sonar"/>
   </joint>
+  <!-- Light Sensor definition -->
+  <link name="light_sensor">
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="1e-5"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+  </link>
+  <!-- Create a joint between the sensor and the chassis of the robot -->
+  <joint name="light_sensor_joint" type="fixed">
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0.2 0 0.07"/>
+    <parent link="base_link"/>
+    <child link="light_sensor"/>
+  </joint>
+  <!-- End of the robot definition -->
 </robot>
