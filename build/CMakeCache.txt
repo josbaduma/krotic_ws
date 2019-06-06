@@ -101,6 +101,13 @@ CATKIN_DEVEL_PREFIX:PATH=/home/jose/krotic_ws/devel
 //Catkin enable testing
 CATKIN_ENABLE_TESTING:BOOL=ON
 
+//path to which gradle configuration and artifacts are deployed
+// in your workspace
+CATKIN_GLOBAL_GRADLE_DESTINATION:PATH=share/gradle
+
+//path to which maven artifacts are deployed in your workspace
+CATKIN_GLOBAL_MAVEN_DESTINATION:PATH=share/maven
+
 //Catkin skip testing
 CATKIN_SKIP_TESTING:BOOL=OFF
 
@@ -263,7 +270,10 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Path to a program.
-DOXYGEN_EXECUTABLE:FILEPATH=DOXYGEN_EXECUTABLE-NOTFOUND
+DOXYGEN_EXECUTABLE:FILEPATH=/usr/bin/doxygen
+
+//Doxygen found
+DOXYGEN_FOUND:BOOL=TRUE
 
 //Path to a program.
 EMPY_EXECUTABLE:FILEPATH=/usr/bin/empy
@@ -682,6 +692,9 @@ gencpp_DIR:PATH=/opt/ros/kinetic/share/gencpp/cmake
 //The directory containing a CMake configuration file for geneus.
 geneus_DIR:PATH=/opt/ros/kinetic/share/geneus/cmake
 
+//The directory containing a CMake configuration file for genjava.
+genjava_DIR:PATH=/opt/ros/kinetic/share/genjava/cmake
+
 //The directory containing a CMake configuration file for genlisp.
 genlisp_DIR:PATH=/opt/ros/kinetic/share/genlisp/cmake
 
@@ -769,6 +782,12 @@ krotic_description_BINARY_DIR:STATIC=/home/jose/krotic_ws/build/krotic_descripti
 
 //Value Computed by CMake
 krotic_description_SOURCE_DIR:STATIC=/home/jose/krotic_ws/src/krotic_description
+
+//Value Computed by CMake
+krotic_devel_BINARY_DIR:STATIC=/home/jose/krotic_ws/build/krotic_devel
+
+//Value Computed by CMake
+krotic_devel_SOURCE_DIR:STATIC=/home/jose/krotic_ws/src/krotic_devel
 
 //Value Computed by CMake
 krotic_gazebo_BINARY_DIR:STATIC=/home/jose/krotic_ws/build/krotic_gazebo
@@ -862,6 +881,9 @@ rosgraph_DIR:PATH=/opt/ros/kinetic/share/rosgraph/cmake
 
 //The directory containing a CMake configuration file for rosgraph_msgs.
 rosgraph_msgs_DIR:PATH=/opt/ros/kinetic/share/rosgraph_msgs/cmake
+
+//The directory containing a CMake configuration file for rosjava_build_tools.
+rosjava_build_tools_DIR:PATH=/opt/ros/kinetic/share/rosjava_build_tools/cmake
 
 //The directory containing a CMake configuration file for roslib.
 roslib_DIR:PATH=/opt/ros/kinetic/share/roslib/cmake
@@ -1073,7 +1095,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=9
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

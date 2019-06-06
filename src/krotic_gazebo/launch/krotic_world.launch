@@ -32,5 +32,7 @@
 
 	<!-- start rviz config with krotic model and active sensors -->
 	<node type="rviz" name="rviz" pkg="rviz" args="-d $(find krotic_description)/rviz/krotic.rviz" />
+
+	<node name="soundplay_node" pkg="sound_play" type="soundplay_node.py"/>
 	
 </launch>
